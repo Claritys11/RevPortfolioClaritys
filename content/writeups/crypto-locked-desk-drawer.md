@@ -10,7 +10,7 @@ summary: "🔚 Kesimpulan: Challenge ini menggabungkan Forensik (metadata & steg
 tags: ["MISC","MEDIUM","AES"]
 status: "published"
 flag: "FGTE{MISC_MASTERED}"
-attachments: [{"url":"https://dfbro.my.id/assets/uploads/27129158-bbdf-4108-9ed0-ac2e7c8b4e40-pkwu-1-.pdf","name":"27129158-bbdf-4108-9ed0-ac2e7c8b4e40-pkwu-1-.pdf","contentType":"application/pdf"}]
+attachments: [{"url":"/assets/uploads/27129158-bbdf-4108-9ed0-ac2e7c8b4e40-pkwu-1-.pdf","name":"27129158-bbdf-4108-9ed0-ac2e7c8b4e40-pkwu-1-.pdf","contentType":"application/pdf"}]
 source: "https://claritys.web.id/writeups/crypto-locked-desk-drawer"
 ---
 
@@ -114,7 +114,7 @@ Open the drawer with pass: pass-xyz1234⏎
 drawer.enc: data
 </code></pre><p>Hasil:</p><pre><code>data
 </code></pre><hr><h3>❌ Percobaan yang gagal</h3><p>Beberapa metode dicoba namun gagal:</p><ul><li><p>❌ OpenSSL (bad magic number)</p></li><li><p>❌ ZIP / archive</p></li><li><p>❌ XOR</p></li></ul><p>👉 Artinya:</p><blockquote><p>Ini bukan format standar → kemungkinan <strong>raw encryption</strong></p></blockquote><hr><h2>🧠 Tahap 5 — Analisis Kriptografi</h2><h3>📏 Observasi penting</h3><pre><code>.rw-r--r--   64 claritys  3 Mar 16:45  drawer.enc
-</code></pre><ul><li><p>Ukuran file: <strong>64 byte</strong></p></li><li><p>AES block size: <strong>16 byte</strong></p></li></ul><p>👉 64 byte = 4 blok AES</p><p>➡️ Indikasi kuat:</p><blockquote><p>Menggunakan <strong>AES</strong></p></blockquote><hr><h3>🔑 Masalah: password ≠ key</h3><p>AES membutuhkan:</p><ul><li><p>16 / 24 / 32 byte key</p></li></ul><p></p><img src="https://dfbro.my.id/assets/uploads/d2643c8b-0f6a-40c3-a44e-645c51247867-best-unemployed-moments-kai-cenat-best-unemployed-moments.png" alt="best-unemployed-moments-kai-cenat-best-unemployed-moments.png"><p>Password:</p><pre><code>pass-xyz1234 (12 byte)
+</code></pre><ul><li><p>Ukuran file: <strong>64 byte</strong></p></li><li><p>AES block size: <strong>16 byte</strong></p></li></ul><p>👉 64 byte = 4 blok AES</p><p>➡️ Indikasi kuat:</p><blockquote><p>Menggunakan <strong>AES</strong></p></blockquote><hr><h3>🔑 Masalah: password ≠ key</h3><p>AES membutuhkan:</p><ul><li><p>16 / 24 / 32 byte key</p></li></ul><p></p><img src="/assets/uploads/d2643c8b-0f6a-40c3-a44e-645c51247867-best-unemployed-moments-kai-cenat-best-unemployed-moments.png" alt="best-unemployed-moments-kai-cenat-best-unemployed-moments.png"><p>Password:</p><pre><code>pass-xyz1234 (12 byte)
 </code></pre><p>👉 Maka:</p><blockquote><p>Password harus diubah menjadi key</p></blockquote><hr><h3>🔬 Coba Hash sebagai Key</h3><h4>❌ SHA256 (tidak berhasil)</h4><h4>✅ MD5 (berhasil sebagian)</h4><pre><code class="language-python">import hashlib
 from Crypto.Cipher import AES<p>data = open(&quot;drawer.enc&quot;,&quot;rb&quot;).read()
 key = hashlib.md5(b&quot;pass-xyz1234&quot;).digest()</p>
