@@ -5,7 +5,8 @@ import { Media } from "@/components/site/media";
 import { SectionLabel } from "@/components/site/section-label";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { listProjects } from "@/lib/data/projects";
-import { breadcrumbJsonLd, jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
+import { getProfile, listWriteups } from "@/lib/content";
+import { breadcrumbJsonLd, dynamicKeywords, jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
 import { ids } from "@/lib/seo-graph";
 import { siteUrl } from "@/lib/site";
 
@@ -22,14 +23,16 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const project = await getProject((await params).id);
+  const [project, profile, writeups, projects] = await Promise.all([getProject((await params).id), getProfile(), listWriteups(), listProjects()]);
   if (!project) return { title: "Not found", robots: { index: false } };
   const pathname = `/projects/${encodeURIComponent(project.id)}`;
+  const description = truncate(project.description || `${project.title} — ${project.category} project by ${profile.displayName}.`, 158);
   return {
-    title: project.title,
-    description: truncate(project.description || `${project.title} — ${project.category} project by Elang Dimas Syadewa.`, 158),
+    title: `${project.title} — ${project.category}`,
+    description,
+    keywords: dynamicKeywords(profile, writeups, projects, [project.category, ...project.tags]),
     alternates: { canonical: pathname },
-    openGraph: pageOpenGraph(pathname),
+    openGraph: pageOpenGraph(pathname, { title: project.title, description, ...(project.imageUrl ? { images: [{ url: project.imageUrl.startsWith("http") ? project.imageUrl : project.imageUrl }] } : {}) }, profile),
   };
 }
 

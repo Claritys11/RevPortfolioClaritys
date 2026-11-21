@@ -5,17 +5,19 @@ import { SplitHeading } from "@/components/motion/split-heading";
 import { Media } from "@/components/site/media";
 import { SectionLabel } from "@/components/site/section-label";
 import { listProjects } from "@/lib/data/projects";
-import { breadcrumbJsonLd, jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
+import { breadcrumbJsonLd, dynamicKeywords, jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
+import { getProfile, listWriteups } from "@/lib/content";
 import { ids } from "@/lib/seo-graph";
 import { siteUrl } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const projects = await listProjects();
+  const [projects, profile, writeups] = await Promise.all([listProjects(), getProfile(), listWriteups()]);
   return {
-    title: "Projects — Web Apps & Security Tooling",
-    description: truncate(`Projects built by Elang Dimas Syadewa (Claritys): ${projects.map((p) => p.title.split(" — ")[0]).join(", ")}.`, 158),
+    title: `${projects.length} Projects — Security Tooling & Web Apps`,
+    description: truncate(`${projects.length} projects by ${profile.displayName} (${profile.alias}): ${projects.map((p) => p.title.split(" — ")[0]).join(", ")}.`, 158),
+    keywords: dynamicKeywords(profile, writeups, projects),
     alternates: { canonical: "/projects" },
-    openGraph: pageOpenGraph("/projects"),
+    openGraph: pageOpenGraph("/projects", { description: truncate(`Security tooling and web apps by ${profile.displayName}.`, 158) }, profile),
   };
 }
 

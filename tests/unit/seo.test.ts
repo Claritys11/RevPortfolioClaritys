@@ -34,9 +34,13 @@ describe("helpers", () => {
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: "https://x.dev/" },
-        { "@type": "ListItem", position: 2, name: "Writeups", item: "https://x.dev/writeups" },
+        { "@type": "ListItem", position: 2, name: "Writeups", item: "https://x.dev/writeups/" },
       ],
     });
+  });
+  it("breadcrumb items keep the canonical trailing slash without doubling it", () => {
+    const result = breadcrumbJsonLd("https://x.dev", [{ name: "Writeups", path: "/writeups/" }]);
+    expect(result.itemListElement[0].item).toBe("https://x.dev/writeups/");
   });
 });
 

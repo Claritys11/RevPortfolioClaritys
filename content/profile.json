@@ -100,22 +100,32 @@
     }
   ],
   "seo": {
-    "jobTitle": "Cybersecurity Student",
-    "locale": "id_ID",
-    "description": "Elang Dimas Syadewa (Claritys) — Cybersecurity Specialist from Malang, Indonesia. I'm an IT student passionate about cybersecurity, with a focus on binary…",
+    "jobTitle": "Cybersecurity Student & CTF Player",
+    "locale": "en_US",
+    "defaultTitle": "Elang Dimas Syadewa (Claritys) — CTF Player & Pwn Writeups",
+    "description": "Elang Dimas Syadewa (Claritys) — CTF player & cybersecurity student from Malang. CTF writeups on pwn, binary exploitation, web exploitation and reverse engineering.",
     "keywords": [
-      "CTF",
+      "Elang Dimas Syadewa",
+      "Claritys",
+      "elanggslibaw",
+      "CTF Player",
+      "CTF Writeups",
+      "Cybersecurity",
       "Pwn",
       "Binary Exploitation",
+      "Buffer Overflow",
+      "ret2libc",
       "Web Exploitation",
-      "Cybersecurity"
+      "Reverse Engineering",
+      "Digital Forensics",
+      "Security Researcher",
+      "SMK Telkom Malang",
+      "Malang Indonesia"
     ],
     "sameAs": [
-      "https://github.com/Claritys11/DevSecOps-Dashboard",
-      "https://github.com/Claritys11/orbit-bioenergy-tracker",
       "https://github.com/Claritys11",
       "https://www.instagram.com/elanggslibaw"
     ],
-    "siteName": "Elang Dimas Syadewa Portfolio"
+    "siteName": "Elang Dimas Syadewa — CTF Player & Pwn Writeups"
   }
 }

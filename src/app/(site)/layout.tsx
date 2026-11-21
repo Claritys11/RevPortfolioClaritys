@@ -5,13 +5,14 @@ import { Nav } from "@/components/site/nav";
 import { Preloader } from "@/components/site/preloader";
 import { CinematicFooter, type FooterLink } from "@/components/ui/motion-footer";
 import { getProfile } from "@/lib/data/profile";
-import { getCategoryStats, getCompetitions } from "@/lib/data/writeups";
-import { jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
+import { getCategoryStats, getCompetitions, listWriteups } from "@/lib/data/writeups";
+import { listProjects } from "@/lib/content";
+import { dynamicKeywords, jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
 import { siteGraph } from "@/lib/seo-graph";
 import { siteUrl } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const p = await getProfile();
+  const [p, writeups, projects] = await Promise.all([getProfile(), listWriteups(), listProjects()]);
   const siteName = p.seo.siteName ?? `${p.displayName} Portfolio`;
   return {
     // absolute: the root layout's own template must not wrap the site's home title.
@@ -20,11 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
       template: p.seo.titleTemplate ?? `%s — ${p.displayName} (${p.alias})`,
     },
     description: truncate(p.seo.description ?? "Pwn-focused CTF player and builder from Malang, Indonesia.", 158),
-    keywords: p.seo.keywords,
+    // Derived from published content so new writeups/categories/tags become SEO keywords automatically.
+    keywords: dynamicKeywords(p, writeups, projects),
     authors: [{ name: p.displayName, url: siteUrl() }],
     creator: p.displayName,
     applicationName: siteName,
-    openGraph: pageOpenGraph("/", { siteName, locale: p.seo.locale ?? "id_ID" }),
+    openGraph: pageOpenGraph("/", { siteName, locale: p.seo.locale ?? "en_US" }, p),
     twitter: { card: "summary_large_image" },
     robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
     category: "technology",

@@ -3,18 +3,20 @@ import { SplitHeading } from "@/components/motion/split-heading";
 import { AchievementList } from "@/components/site/achievement-list";
 import { SectionLabel } from "@/components/site/section-label";
 import { listAchievements } from "@/lib/data/achievements";
-import { breadcrumbJsonLd, jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
+import { breadcrumbJsonLd, dynamicKeywords, jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
+import { getProfile, listProjects, listWriteups } from "@/lib/content";
 import { ids } from "@/lib/seo-graph";
 import { siteUrl } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const items = await listAchievements();
+  const [items, profile, writeups, projects] = await Promise.all([listAchievements(), getProfile(), listWriteups(), listProjects()]);
   const notable = items.filter((a) => a.weight >= 4).map((a) => a.title.split(" – ")[0]);
   return {
-    title: "Achievements & CTF Record",
-    description: truncate(`${items.length} achievements and certificates of Elang Dimas Syadewa (Claritys). Highlights: ${notable.join(", ")}.`, 158),
+    title: `${items.length} Achievements & CTF Record`,
+    description: truncate(`${items.length} achievements and certificates of ${profile.displayName} (${profile.alias}). Highlights: ${notable.join(", ")}.`, 158),
+    keywords: dynamicKeywords(profile, writeups, projects),
     alternates: { canonical: "/achievements" },
-    openGraph: pageOpenGraph("/achievements"),
+    openGraph: pageOpenGraph("/achievements", { description: `${items.length} CTF achievements by ${profile.displayName}.` }, profile),
   };
 }
 

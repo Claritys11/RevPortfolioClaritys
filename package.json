@@ -6,14 +6,15 @@
     "dev": "next dev -p 3007",
     "start": "node scripts/serve-static.mjs",
     "preview:static": "node scripts/serve-static.mjs",
-    "build": "node scripts/prepare-static-exports.mjs && next build && node scripts/postprocess-pages-paths.mjs",
+    "build": "node scripts/prepare-static-exports.mjs && next build && node scripts/postprocess-pages-paths.mjs && node scripts/normalize-og-images.mjs",
     "lint": "eslint .",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "e2e": "playwright test",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "verify:content": "node scripts/verify-content.mjs",
-    "verify:output": "node scripts/verify-static-output.mjs"
+    "verify:output": "node scripts/verify-static-output.mjs",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

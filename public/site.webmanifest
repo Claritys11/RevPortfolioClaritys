@@ -1,0 +1,14 @@
+{
+  "name": "Elang Dimas Syadewa (Claritys) — CTF Player & Pwn Writeups",
+  "short_name": "Claritys",
+  "description": "CTF writeups and projects by Elang Dimas Syadewa — pwn, binary exploitation, web exploitation, reverse engineering.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0E0E0C",
+  "theme_color": "#0E0E0C",
+  "icons": [
+    { "src": "/icon.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/apple-icon.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}

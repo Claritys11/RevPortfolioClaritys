@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-export const metadata = { title: "CTF Writeups", alternates: { canonical: "/writeups" } };
+export const metadata = {
+  title: "CTF Writeups",
+  alternates: { canonical: "/writeups/" },
+  robots: { index: false, follow: true },
+};
 
 export default function LegacyCtfIndex() {
   return (

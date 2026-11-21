@@ -3,22 +3,27 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/site/theme-toggle";
 import { listWriteups } from "@/lib/data/writeups";
 import { BIO_LINKS, type BioLink } from "@/lib/links";
-import { pageOpenGraph } from "@/lib/seo";
+import { pageOpenGraph, dynamicKeywords } from "@/lib/seo";
+import { getProfile, listProjects } from "@/lib/content";
 import type { WriteupSummary } from "@/lib/types";
 
 // Lives outside the (site) group on purpose: most visits come from Instagram's in-app browser,
 // so this page skips the nav, smooth scroll and footer animation and ships almost no JS.
 
-const description = "Links from Elang (Claritys): the latest CTF writeup, projects, GitHub, Instagram and contact.";
-
-export const metadata: Metadata = {
-  // absolute: the root layout's "%s — Claritys" template would otherwise wrap it again.
-  title: { absolute: "Elang | Claritys — Links" },
-  description,
-  alternates: { canonical: "/links" },
-  openGraph: pageOpenGraph("/links", { title: "Elang | Claritys — Links", description }),
-  twitter: { card: "summary_large_image" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [profile, writeups, projects] = await Promise.all([getProfile(), listWriteups(), listProjects()]);
+  const description = `Links from ${profile.alias} (${profile.displayName}): the latest CTF writeup, projects, GitHub, Instagram and contact.`;
+  return {
+    // absolute: the root layout template must not wrap this already-branded title.
+    title: { absolute: `${profile.alias} | ${profile.displayName} — Links` },
+    description,
+    keywords: dynamicKeywords(profile, writeups, projects),
+    alternates: { canonical: "/links" },
+    robots: { index: true, follow: true },
+    openGraph: pageOpenGraph("/links", { title: `${profile.alias} | ${profile.displayName} — Links`, description }, profile),
+    twitter: { card: "summary_large_image" },
+  };
+}
 
 /** A failed or empty fetch only hides the latest-writeup card; the rest of the page still renders. */
 async function latestWriteup(): Promise<WriteupSummary | null> {

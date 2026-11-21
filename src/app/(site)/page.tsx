@@ -15,16 +15,21 @@ import { listAchievements } from "@/lib/data/achievements";
 import { getProfile } from "@/lib/data/profile";
 import { listProjects } from "@/lib/data/projects";
 import { getCategoryStats, listWriteups } from "@/lib/data/writeups";
-import { pageOpenGraph, truncate } from "@/lib/seo";
+import { pageOpenGraph, dynamicKeywords, truncate } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const [p, writeups, stats] = await Promise.all([getProfile(), listWriteups(), getCategoryStats()]);
+  const [p, writeups, stats, projects] = await Promise.all([getProfile(), listWriteups(), getCategoryStats(), listProjects()]);
   const pwn = stats.find((s) => s.category === "Pwn")?.count ?? 0;
   const description = truncate(
     `${p.displayName} (${p.alias}) — ${p.seo.jobTitle ?? "CTF player"} from Malang, Indonesia. ${writeups.length} CTF writeups (${pwn} pwn), projects and a competition record.`,
     158,
   );
-  return { description, alternates: { canonical: "/" }, openGraph: pageOpenGraph("/", { description }) };
+  return {
+    description,
+    keywords: dynamicKeywords(p, writeups, projects),
+    alternates: { canonical: "/" },
+    openGraph: pageOpenGraph("/", { description }, p),
+  };
 }
 
 export default async function Home() {

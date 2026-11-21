@@ -3,47 +3,45 @@ import { SplitHeading } from "@/components/motion/split-heading";
 import { SectionLabel } from "@/components/site/section-label";
 import { WriteupFilter } from "@/components/site/writeup-filter";
 import { getCategoryStats, getCompetitions, listWriteups } from "@/lib/data/writeups";
-import { breadcrumbJsonLd, jsonLdScript, pageOpenGraph } from "@/lib/seo";
-import { ids } from "@/lib/seo-graph";
+import { getProfile, listProjects } from "@/lib/content";
+import { dynamicKeywords, jsonLdScript, pageOpenGraph, writeupCollectionJsonLd } from "@/lib/seo";
 import { siteUrl } from "@/lib/site";
 
 
-export async function generateMetadata(): Promise<Metadata> {
-  const [items, stats, competitions] = await Promise.all([listWriteups(), getCategoryStats(), getCompetitions()]);
+function collectionDescription(count: number, stats: { count: number; category: string }[], competitions: string[]) {
   const mix = stats.map((s) => `${s.count} ${s.category.toLowerCase()}`).join(", ");
+  return `${count} CTF writeups: ${mix}. From ${competitions.slice(0, 5).join(", ")} and more.`;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [items, stats, competitions, profile, projects] = await Promise.all([
+    listWriteups(),
+    getCategoryStats(),
+    getCompetitions(),
+    getProfile(),
+    listProjects(),
+  ]);
+  const description = collectionDescription(items.length, stats, competitions);
+  const categories = stats.map((s) => s.category);
   return {
-    title: "CTF Writeups — Pwn, Reverse Engineering & Forensics",
-    description: `${items.length} CTF writeups by Elang Dimas Syadewa (Claritys): ${mix}. From ${competitions.slice(0, 4).join(", ")} and more.`,
+    // Category list comes from published content, so a new category gets its own title segment.
+    title: `CTF Writeups — ${categories.slice(0, 4).join(", ")}`,
+    description,
+    keywords: dynamicKeywords(profile, items, projects),
     alternates: { canonical: "/writeups" },
-    openGraph: pageOpenGraph("/writeups"),
+    openGraph: pageOpenGraph("/writeups", { title: `CTF Writeups by ${profile.displayName}`, description }, profile),
   };
 }
 
 export default async function WriteupsPage() {
-  const [items, stats] = await Promise.all([listWriteups(), getCategoryStats()]);
+  const [items, stats, competitions, profile] = await Promise.all([
+    listWriteups(),
+    getCategoryStats(),
+    getCompetitions(),
+    getProfile(),
+  ]);
   const base = siteUrl();
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "CollectionPage",
-        "@id": `${base}/writeups#page`,
-        url: `${base}/writeups`,
-        name: "CTF Writeups",
-        isPartOf: { "@id": ids(base).website },
-        about: stats.map((s) => s.category),
-        mainEntity: {
-          "@type": "ItemList",
-          numberOfItems: items.length,
-          itemListElement: items.map((w, i) => ({ "@type": "ListItem", position: i + 1, url: `${base}${w.href}`, name: w.title })),
-        },
-      },
-      breadcrumbJsonLd(base, [
-        { name: "Home", path: "/" },
-        { name: "Writeups", path: "/writeups" },
-      ]),
-    ],
-  };
+  const jsonLd = writeupCollectionJsonLd(base, profile, items, collectionDescription(items.length, stats, competitions));
   return (
     <main className="mx-auto max-w-[1600px] px-4 pt-32 pb-24 md:px-8 md:pt-44">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />

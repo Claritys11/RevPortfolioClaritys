@@ -13,18 +13,19 @@ import { listProjects } from "@/lib/data/projects";
 import { getCategoryStats, getCompetitions, listWriteups } from "@/lib/data/writeups";
 import { evidenceFor, SYSADMIN, WEBDEV } from "@/lib/focus";
 import { formatDate } from "@/lib/format";
-import { breadcrumbJsonLd, jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
+import { breadcrumbJsonLd, dynamicKeywords, jsonLdScript, pageOpenGraph, truncate } from "@/lib/seo";
 import { ids } from "@/lib/seo-graph";
 import { siteUrl } from "@/lib/site";
 import { isGenericTag } from "@/lib/tags";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const p = await getProfile();
+  const [p, writeups, projects] = await Promise.all([getProfile(), listWriteups(), listProjects()]);
   return {
-    title: "About",
-    description: truncate(`${p.displayName} (${p.alias}) — ${p.seo.jobTitle ?? "CTF player"} from Malang, Indonesia. ${p.aboutText}`, 158),
+    title: "About — CTF Player & Cybersecurity Student",
+    description: truncate(`About ${p.displayName} (${p.alias}) — CTF player and cybersecurity student from Malang. Binary exploitation, web security, Linux and CTF writeups.`, 158),
+    keywords: dynamicKeywords(p, writeups, projects),
     alternates: { canonical: "/about" },
-    openGraph: pageOpenGraph("/about", { type: "profile", firstName: p.displayName.split(" ")[0], lastName: p.displayName.split(" ").slice(1).join(" "), username: p.alias }),
+    openGraph: pageOpenGraph("/about", { type: "profile", firstName: p.displayName.split(" ")[0], lastName: p.displayName.split(" ").slice(1).join(" "), username: p.alias }, p),
   };
 }
 

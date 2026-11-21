@@ -9,11 +9,11 @@ import { RelatedWriteups } from "@/components/site/related-writeups";
 import { WriteupExport } from "@/components/site/writeup-export";
 import { getProfile } from "@/lib/data/profile";
 import { getAdjacentWriteups, getWriteup, listWriteups } from "@/lib/data/writeups";
-import { publishedSlugs } from "@/lib/content";
+import { publishedSlugs, listProjects } from "@/lib/content";
 import { relatedWriteups } from "@/lib/related";
 import { formatDate, readingMinutes } from "@/lib/format";
 import { renderWriteupHtml } from "@/lib/html";
-import { breadcrumbJsonLd, detectLang, jsonLdScript, plainText, writeupSeoDescription, writeupSeoTitle } from "@/lib/seo";
+import { breadcrumbJsonLd, detectLang, dynamicKeywords, jsonLdScript, pageOpenGraph, plainText, writeupSeoDescription, writeupSeoTitle } from "@/lib/seo";
 import { ids } from "@/lib/seo-graph";
 import { siteUrl } from "@/lib/site";
 
@@ -25,27 +25,32 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const w = await getWriteup((await params).slug);
+  const [w, profile, all, projects] = await Promise.all([getWriteup((await params).slug), getProfile(), listWriteups(), listProjects()]);
   if (!w) return { title: "Not found", robots: { index: false } };
   const description = writeupSeoDescription(w, w.content);
+  const siteName = profile.seo.siteName ?? `${profile.displayName} Portfolio`;
   return {
     title: writeupSeoTitle(w),
     description,
-    keywords: [...w.tags, w.category, w.competition, "CTF writeup"].filter(Boolean),
+    // Core identity + this writeup's tags/category + the whole site's growing keyword pool.
+    keywords: dynamicKeywords(profile, all, projects, [...w.tags, w.category, w.competition]),
     alternates: { canonical: w.href },
-    openGraph: {
-      type: "article",
-      url: w.href,
-      siteName: "Elang Dimas Syadewa Portfolio",
-      locale: "id_ID",
-      title: writeupSeoTitle(w),
-      description,
-      publishedTime: w.date ?? undefined,
-      modifiedTime: w.updated,
-      section: w.category,
-      tags: w.tags,
-      authors: ["Elang Dimas Syadewa"],
-    },
+    openGraph: pageOpenGraph(
+      w.href,
+      {
+        type: "article",
+        siteName,
+        title: writeupSeoTitle(w),
+        description,
+        publishedTime: w.date ?? undefined,
+        modifiedTime: w.updated,
+        section: w.category,
+        tags: w.tags,
+        authors: [profile.displayName],
+        ...(w.cover ? { images: [{ url: w.cover.startsWith("http") ? w.cover : `${siteUrl()}${w.cover}` }] } : {}),
+      },
+      profile,
+    ),
   };
 }
 
