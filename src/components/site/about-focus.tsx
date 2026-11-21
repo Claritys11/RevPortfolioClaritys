@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import Link from "next/link";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { FocusIcon } from "@/components/site/focus-areas";
@@ -70,7 +72,7 @@ function Complement({ icon, title, sub, line, projects }: { icon: "sysadmin" | "
 export function AboutFocus({ focusName, pwnCount, webCount, total, topTags, pwn, web, sysadmin, webdev, skills }: Props) {
   return (
     <section className="mt-32 grid gap-16 md:mt-44 md:grid-cols-12">
-      <div className="md:col-span-6">
+      <div className="@container md:col-span-6">
         <SectionLabel index={3} name="focus" />
         <div className="mt-6 flex items-center gap-3">
           <FocusIcon kind="pwn" className="h-9 w-[3.6rem] text-foreground" />
@@ -78,11 +80,20 @@ export function AboutFocus({ focusName, pwnCount, webCount, total, topTags, pwn,
             <span className="text-primary">main focus</span> · cybersecurity
           </span>
         </div>
-        <h2 className="mt-6 font-display text-[11.5vw] leading-[0.9] font-black tracking-[-0.04em] md:text-8xl">
+        <h2 className="mt-6 font-display text-[14cqw] leading-[0.9] font-black tracking-[-0.04em]">
           {focusName.split(" ").map((word, i) => (
-            <SplitHeading key={word} as="span" text={word} onScroll delay={i * 0.12} className={i === 0 ? "block whitespace-nowrap text-primary" : "block whitespace-nowrap"} />
+            <Fragment key={word}>
+              {i > 0 && " "}
+              <SplitHeading
+                as="span"
+                text={word}
+                onScroll
+                delay={i * 0.12}
+                keepWordsTogether
+                className={i === 0 ? "block whitespace-nowrap text-primary" : "block whitespace-nowrap"}
+              />
+            </Fragment>
           ))}
-          <span className="sr-only"> (pwn)</span>
         </h2>
         <p className="mt-4 font-display text-3xl font-semibold tracking-tight text-muted-foreground md:text-4xl">
           <span className="text-foreground">&amp;</span> Web Exploitation
