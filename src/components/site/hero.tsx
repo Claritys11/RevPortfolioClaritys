@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import { ScrambleLine } from "@/components/motion/scramble-line";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { Greeting, LiveDot, LocalClock } from "@/components/site/hero-live";
@@ -34,20 +36,32 @@ export function Hero({ name, nameLines, alias, role, location, school }: Props) 
       </div>
       <div className="flex flex-1 flex-col">
         {/* One h1 carrying the full name (search engines read it as the page's main subject). */}
-        <h1 className="mb-10">
+        <h1 className="mb-10 flex flex-1 flex-col justify-center md:block md:flex-none">
           {lines.map((line, index) => (
-            <SplitHeading
-              key={`${index}-${line}`}
-              as="span"
-              text={line}
-              delay={index * 0.15}
-              waitIntro
-              deferUntilIdle
-              keepWordsTogether
-              className={index === 0
-                ? "hero-name-line block font-display text-[min(22vw,17.7cqw)] leading-[0.8] font-black tracking-[-0.05em] md:text-[min(17vw,17.7cqw)]"
-                : "hero-name-line block font-display text-[min(11vw,9.5cqw)] leading-[0.9] font-light tracking-[-0.04em] [font-stretch:125%] md:text-[min(8.5vw,9.5cqw)]"}
-            />
+            <Fragment key={`${index}-${line}`}>
+              {index > 0 && " "}
+              <span
+                className={index === 0
+                ? "hero-name-line block font-display text-[min(26vw,24cqw)] leading-[0.8] font-black tracking-[-0.05em] md:text-[min(17vw,17.7cqw)]"
+                : "hero-name-line block font-display text-[min(17vw,17cqw)] leading-[0.9] font-light tracking-[-0.04em] [font-stretch:125%] md:text-[min(8.5vw,9.5cqw)]"}
+            >
+              {/* Phones stack every word; from md up the words share one line again. */}
+              {line.split(" ").map((word, wordIndex) => (
+                <Fragment key={word}>
+                  {wordIndex > 0 && " "}
+                  <SplitHeading
+                    as="span"
+                    text={word}
+                    delay={index * 0.15 + wordIndex * 0.06}
+                    waitIntro
+                    deferUntilIdle
+                    keepWordsTogether
+                    className="block md:inline-block"
+                  />
+                </Fragment>
+              ))}
+              </span>
+            </Fragment>
           ))}
         </h1>
         {/* Pinned to the bottom of the first screen, so the page opens on the hero alone. */}
