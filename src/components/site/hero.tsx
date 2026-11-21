@@ -8,7 +8,7 @@ type Props = { name: string; nameLines?: string[] | null; alias: string; role: s
 export function Hero({ name, nameLines, alias, role, location, school }: Props) {
   const lines = resolveHeroNameLines(name, nameLines).map((line) => line.toUpperCase());
   return (
-    <section className="relative mx-auto flex min-h-svh max-w-[1600px] flex-col px-4 pt-28 pb-10 md:px-8 md:pt-28 md:pb-14">
+    <section className="@container relative mx-auto flex min-h-svh max-w-[1600px] flex-col px-4 pt-28 pb-10 md:px-8 md:pt-28 md:pb-14">
       <div className="mb-8 flex flex-col justify-between gap-6 md:mb-10 md:flex-row md:items-end">
         <div className="grid gap-2">
           <Greeting className="font-display text-2xl font-medium tracking-tight md:text-3xl" />
@@ -45,8 +45,8 @@ export function Hero({ name, nameLines, alias, role, location, school }: Props) 
               deferUntilIdle
               keepWordsTogether
               className={index === 0
-                ? "hero-name-line block font-display text-[22vw] leading-[0.8] font-black tracking-[-0.05em] md:text-[17vw]"
-                : "hero-name-line block font-display text-[11vw] leading-[0.9] font-light tracking-[-0.04em] [font-stretch:125%] md:text-[8.5vw]"}
+                ? "hero-name-line block font-display text-[min(22vw,17.7cqw)] leading-[0.8] font-black tracking-[-0.05em] md:text-[min(17vw,17.7cqw)]"
+                : "hero-name-line block font-display text-[min(11vw,9.5cqw)] leading-[0.9] font-light tracking-[-0.04em] [font-stretch:125%] md:text-[min(8.5vw,9.5cqw)]"}
             />
           ))}
         </h1>
