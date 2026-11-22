@@ -1,6 +1,6 @@
 # Portfolio Rebuild — Design Spec
 
-Date: 2026-10-06 · Owner: Elang Dimas Syadewa (Claritys) · Replaces: claritys.web.id (repo `Claritys11/RevisionedPortfolio`)
+Date: 2026-10-06 · Owner: Elang Dimas Syadewa (Claritys) · Replaces: claritys.web.id (repo `Claritys11/RevPortfolioClaritys`)
 
 ## 1. Intent
 

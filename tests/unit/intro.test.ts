@@ -33,8 +33,8 @@ describe("createIntroScript", () => {
   });
 
   it("recognizes the project-site homepage after trimming its trailing slash", () => {
-    const script = createIntroScript("/RevisionedPortfolio");
-    expect(script).toContain('p==="/RevisionedPortfolio"');
+    const script = createIntroScript("/portfolio");
+    expect(script).toContain('p==="/portfolio"');
     expect(script).toContain("location.pathname.replace");
   });
 });

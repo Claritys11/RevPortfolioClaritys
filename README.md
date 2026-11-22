@@ -1,6 +1,6 @@
 # Claritys — Elang Dimas Syadewa
 
-Personal static site for Elang Dimas Syadewa (**Claritys**): pwn-focused CTF writeups, projects, achievements, and technical profile. Public content is stored as files in this repository and rendered during the build. The local CMS lives in the sibling `RevisionedPortfolioEditor` repository.
+Personal static site for Elang Dimas Syadewa (**Claritys**): pwn-focused CTF writeups, projects, achievements, and technical profile. Public content is stored as files in this repository and rendered during the build. The local CMS lives in the sibling `RevPortfolioClaritysEditor` repository.
 
 ## Stack
 
@@ -51,7 +51,7 @@ The active deployment is `https://claritys.web.id/` with root base path `/`. `CN
 
 ### Editing content
 
-Run the sibling local editor from `../RevisionedPortfolioEditor`. It reads and writes this repository's `content/` and `public/assets/` directly. There is no second content database. Save changes locally, review the Git diff, then explicitly commit and push. GitHub Actions handles the build and deployment.
+Run the sibling local editor from `../RevPortfolioClaritysEditor`. It reads and writes this repository's `content/` and `public/assets/` directly. There is no second content database. Save changes locally, review the Git diff, then explicitly commit and push. GitHub Actions handles the build and deployment.
 
 ### Data migration archive
 

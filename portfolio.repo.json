@@ -2,6 +2,6 @@
   "schemaVersion": 1,
   "role": "production",
   "instanceName": "Claritys Portfolio",
-  "templateName": "RevisionedPortfolioTemplate",
+  "templateName": "RevPortfolioClaritys",
   "templateContractVersion": 1
 }

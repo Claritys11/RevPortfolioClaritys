@@ -9,10 +9,10 @@ describe("withBasePath", () => {
   });
 
   it("supports an optional project-site base path without duplicating it", () => {
-    expect(normalizeBasePath("/RevisionedPortfolio/")).toBe("/RevisionedPortfolio");
-    expect(withBasePath("/assets/uploads/image.jpg", "/RevisionedPortfolio")).toBe("/RevisionedPortfolio/assets/uploads/image.jpg");
-    expect(withBasePath("/RevisionedPortfolio/assets/uploads/image.jpg", "/RevisionedPortfolio")).toBe("/RevisionedPortfolio/assets/uploads/image.jpg");
-    expect(withBasePath("/RevisionedPortfolio", "/RevisionedPortfolio")).toBe("/RevisionedPortfolio");
+    expect(normalizeBasePath("/portfolio/")).toBe("/portfolio");
+    expect(withBasePath("/assets/uploads/image.jpg", "/portfolio")).toBe("/portfolio/assets/uploads/image.jpg");
+    expect(withBasePath("/portfolio/assets/uploads/image.jpg", "/portfolio")).toBe("/portfolio/assets/uploads/image.jpg");
+    expect(withBasePath("/portfolio", "/portfolio")).toBe("/portfolio");
   });
 
   it("leaves external, inline, anchor and mail URLs unchanged", () => {

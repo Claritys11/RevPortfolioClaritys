@@ -8,6 +8,6 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-## Production and template synchronization
+## Repository ownership
 
-Whenever reusable Production website code changes (layout, components, styling, behavior, content contracts/configuration, accessibility, performance, or tests), make the equivalent generic change in `RevisionedPortfolioTemplate` in the same task. Keep personal content, assets, secrets, and environment-specific values out of the template; use reusable defaults or placeholders instead. Validate and merge both repositories together after each repository's CI passes. Purely personal content/data-only edits do not need to be copied.
+This repository is the canonical Claritys portfolio (`Claritys11/RevPortfolioClaritys`). The former `RevisionedPortfolio` template line is obsolete and must not be used or synced; the Editor counterpart is `Claritys11/RevPortfolioClaritysEditor`.
